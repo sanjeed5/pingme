@@ -17,6 +17,18 @@ AI coding agents can run commands but can't proactively notify you at future tim
 
 No other install needed — uses built-in `osascript`.
 
+## Install CLI (optional)
+
+If you want `pingme` available globally (not just via agent):
+
+```bash
+git clone https://github.com/sanjeed5/pingme.git
+cd pingme
+./install.sh
+```
+
+This symlinks to `~/.local/bin/pingme`.
+
 ## Structure
 
 ```
