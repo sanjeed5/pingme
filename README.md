@@ -17,20 +17,6 @@ AI coding agents (Claude Code, Cursor, Copilot) can run commands but can't proac
 
 That's it. No install needed — uses built-in `osascript`.
 
-### Linux
-
-```bash
-# Usually pre-installed, if not:
-sudo apt install libnotify-bin
-```
-
-## Add to your agent
-
-**Claude Code:** Copy `SKILL.md` to `.claude/skills/pingme/` or include in your project.
-
-**Cursor:** Add SKILL.md content to `.cursorrules`.
-
-**Other agents:** Include SKILL.md in your agent's context.
 
 ## Usage
 
