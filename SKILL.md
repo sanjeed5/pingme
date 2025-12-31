@@ -5,82 +5,44 @@ description: Send desktop notifications to interrupt the user. Use when user ask
 
 # Pingme
 
-Send desktop notifications from the command line. Use this to interrupt the user at specific times.
+Schedule desktop notifications from the command line.
+
+## Commands
+
+```bash
+pingme now "message"           # Immediate notification
+pingme in 30m "message"        # In 30 minutes
+pingme in 1h30m "message"      # In 1 hour 30 minutes
+pingme at 17:30 "message"      # At specific time (24h format)
+pingme at 5:30pm "message"     # At specific time (12h format)
+pingme list                    # Show pending reminders
+pingme clear                   # Clear all tracked reminders
+```
 
 ## When to Use
 
 - User asks: "remind me in 30 minutes" or "ping me at 5:30pm"
 - During day planning: schedule movement breaks, task check-ins, hard stops
-- Before time blocks end: "15 minutes left on this task"
+- Before time blocks end: warn user 15 min before block ends
 - ADHD support: break hyperfocus, enforce boundaries
-
-## Commands
-
-### Immediate notification
-
-```bash
-# macOS (built-in, no install needed)
-osascript -e 'display notification "YOUR MESSAGE" with title "Ping" sound name "Glass"'
-
-# Linux
-notify-send "Ping" "YOUR MESSAGE"
-```
-
-### Delayed notification (relative time)
-
-Run in background so it doesn't block:
-
-```bash
-# "in 30m" = 1800 seconds
-(sleep 1800 && osascript -e 'display notification "YOUR MESSAGE" with title "⏰ Ping" sound name "Glass"') &
-
-# "in 1h" = 3600 seconds  
-(sleep 3600 && osascript -e 'display notification "YOUR MESSAGE" with title "⏰ Ping" sound name "Glass"') &
-
-# "in 90m" = 5400 seconds (movement break)
-(sleep 5400 && osascript -e 'display notification "Stand up, leave the room" with title "🚶 Break" sound name "Glass"') &
-```
-
-### Scheduled notification (absolute time)
-
-Calculate seconds until target time, then sleep:
-
-```bash
-# For a specific time today (e.g., 5:30pm = 17:30)
-TARGET=$(date -j -f "%H:%M" "17:30" +%s 2>/dev/null || date -d "17:30" +%s)
-NOW=$(date +%s)
-DELAY=$((TARGET - NOW))
-if [ $DELAY -gt 0 ]; then
-  (sleep $DELAY && osascript -e 'display notification "YOUR MESSAGE" with title "⏰ Ping" sound name "Glass"') &
-fi
-```
-
-## Quick Reference
-
-| Duration | Seconds |
-|----------|---------|
-| 15m      | 900     |
-| 30m      | 1800    |
-| 45m      | 2700    |
-| 1h       | 3600    |
-| 90m      | 5400    |
-| 2h       | 7200    |
-
-## Setup
-
-**macOS:** No install needed. First time, open Script Editor app once so it registers with Notification Center, then enable notifications in System Settings → Notifications → Script Editor.
-
-**Linux:** `notify-send` is usually pre-installed (`sudo apt install libnotify-bin` if not).
 
 ## Examples
 
 ```bash
 # User: "remind me in 45 min to check the build"
-(sleep 2700 && osascript -e 'display notification "Check the build" with title "⏰ Ping" sound name "Glass"') &
+pingme in 45m "Check the build"
 
-# Day planning: schedule wrap-up reminder for 5:30pm
-TARGET=$(date -j -f "%H:%M" "17:30" +%s); NOW=$(date +%s); DELAY=$((TARGET - NOW)); [ $DELAY -gt 0 ] && (sleep $DELAY && osascript -e 'display notification "Client work done - evening time" with title "🏠 Wrap Up" sound name "Glass"') &
+# Day planning: schedule hard stops
+pingme at 17:30 "Wrap up client work - passion project time"
+pingme at 19:45 "Start wrapping up - Sulbia time at 8pm"
 
-# Movement break in 90 min
-(sleep 5400 && osascript -e 'display notification "Stand up, leave the room" with title "🚶 Break" sound name "Glass"') &
+# Movement breaks
+pingme in 90m "Movement break - stand up, leave the room"
+
+# Check what's pending
+pingme list
 ```
+
+## Setup
+
+Requires the `pingme` script in PATH. Tracks reminders in `~/.pingme/scheduled.json`.
