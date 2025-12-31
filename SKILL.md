@@ -1,22 +1,24 @@
 ---
 name: pingme
-description: Send desktop notifications to interrupt the user. Use when user asks to be reminded at a specific time or after a duration, or proactively during day planning to schedule check-ins, breaks, and hard stops. Helps combat time blindness and hyperfocus on wrong tasks.
+description: Schedule desktop notifications to interrupt the user. Use when user asks to be reminded at a specific time or after a duration, or proactively during day planning to schedule check-ins, breaks, and hard stops. Helps combat time blindness and hyperfocus.
 ---
 
 # Pingme
 
-Schedule desktop notifications from the command line.
+Schedule desktop notifications from the command line. Tracks pending reminders in `~/.pingme/`.
 
-## Commands
+## Usage
+
+Run the script at `scripts/pingme.py`:
 
 ```bash
-pingme now "message"           # Immediate notification
-pingme in 30m "message"        # In 30 minutes
-pingme in 1h30m "message"      # In 1 hour 30 minutes
-pingme at 17:30 "message"      # At specific time (24h format)
-pingme at 5:30pm "message"     # At specific time (12h format)
-pingme list                    # Show pending reminders
-pingme clear                   # Clear all tracked reminders
+python3 scripts/pingme.py now "message"           # Immediate notification
+python3 scripts/pingme.py in 30m "message"        # In 30 minutes
+python3 scripts/pingme.py in 1h30m "message"      # In 1 hour 30 minutes
+python3 scripts/pingme.py at 17:30 "message"      # At specific time (24h)
+python3 scripts/pingme.py at 5:30pm "message"     # At specific time (12h)
+python3 scripts/pingme.py list                    # Show pending reminders
+python3 scripts/pingme.py clear                   # Clear tracked reminders
 ```
 
 ## When to Use
@@ -30,19 +32,21 @@ pingme clear                   # Clear all tracked reminders
 
 ```bash
 # User: "remind me in 45 min to check the build"
-pingme in 45m "Check the build"
+python3 scripts/pingme.py in 45m "Check the build"
 
 # Day planning: schedule hard stops
-pingme at 17:30 "Wrap up client work - passion project time"
-pingme at 19:45 "Start wrapping up - Sulbia time at 8pm"
+python3 scripts/pingme.py at 17:30 "Wrap up client work - passion project time"
+python3 scripts/pingme.py at 19:45 "Start wrapping up - evening time at 8pm"
 
 # Movement breaks
-pingme in 90m "Movement break - stand up, leave the room"
+python3 scripts/pingme.py in 90m "Movement break - stand up, leave the room"
 
 # Check what's pending
-pingme list
+python3 scripts/pingme.py list
 ```
 
 ## Setup
 
-Requires the `pingme` script in PATH. Tracks reminders in `~/.pingme/scheduled.json`.
+**macOS:** Open Script Editor app once, then enable notifications in System Settings → Notifications → Script Editor.
+
+**Linux:** Replace `osascript` line in script with `notify-send`.
