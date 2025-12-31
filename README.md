@@ -6,27 +6,31 @@ An [Agent Skill](https://agentskills.io) that teaches AI agents to send schedule
 
 AI coding agents (Claude Code, Cursor, Copilot) can run commands but can't proactively notify you at future times. If you have ADHD or just lose track of time while coding, you need something to interrupt your hyperfocus.
 
-**pingme** teaches your agent to schedule notifications using existing CLI tools — no new software needed.
+**pingme** teaches your agent to schedule notifications using built-in OS tools — no extra software needed.
 
 ## Setup
 
-### 1. Install notification tool
+### macOS
+
+1. Open **Script Editor** app once (so it registers with Notification Center)
+2. Go to **System Settings → Notifications → Script Editor** → Enable notifications
+
+That's it. No install needed — uses built-in `osascript`.
+
+### Linux
 
 ```bash
-# macOS
-brew install terminal-notifier
-
-# Linux (usually pre-installed)
+# Usually pre-installed, if not:
 sudo apt install libnotify-bin
 ```
 
-### 2. Add the skill to your agent
+## Add to your agent
 
-**Claude Code:** Copy `SKILL.md` to your `.claude/skills/pingme/` folder or reference it in your project.
+**Claude Code:** Copy `SKILL.md` to `.claude/skills/pingme/` or include in your project.
 
-**Cursor:** Add the SKILL.md content to your `.cursorrules` or project instructions.
+**Cursor:** Add SKILL.md content to `.cursorrules`.
 
-**Other agents:** Include the SKILL.md content in your agent's context.
+**Other agents:** Include SKILL.md in your agent's context.
 
 ## Usage
 
@@ -36,13 +40,13 @@ Once set up, just ask your agent:
 - "Ping me at 5:30pm to wrap up"
 - "Schedule movement breaks every 90 minutes"
 
-The agent will run the appropriate background command and you'll get a desktop notification at the right time.
+The agent runs a background command and you get a notification at the right time.
 
 ## How it works
 
-No magic — just existing tools:
+No magic — just built-in OS tools:
 
-- `terminal-notifier` (macOS) or `notify-send` (Linux) for notifications
+- `osascript` (macOS) or `notify-send` (Linux) for notifications
 - `sleep` for delays
 - Background processes `(&)` so commands don't block
 

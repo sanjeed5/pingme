@@ -19,8 +19,8 @@ Send desktop notifications from the command line. Use this to interrupt the user
 ### Immediate notification
 
 ```bash
-# macOS
-terminal-notifier -title "Ping" -message "YOUR MESSAGE" -sound default
+# macOS (built-in, no install needed)
+osascript -e 'display notification "YOUR MESSAGE" with title "Ping" sound name "Glass"'
 
 # Linux
 notify-send "Ping" "YOUR MESSAGE"
@@ -32,13 +32,13 @@ Run in background so it doesn't block:
 
 ```bash
 # "in 30m" = 1800 seconds
-(sleep 1800 && terminal-notifier -title "⏰ Ping" -message "YOUR MESSAGE" -sound default) &
+(sleep 1800 && osascript -e 'display notification "YOUR MESSAGE" with title "⏰ Ping" sound name "Glass"') &
 
-# "in 1h" = 3600 seconds
-(sleep 3600 && terminal-notifier -title "⏰ Ping" -message "YOUR MESSAGE" -sound default) &
+# "in 1h" = 3600 seconds  
+(sleep 3600 && osascript -e 'display notification "YOUR MESSAGE" with title "⏰ Ping" sound name "Glass"') &
 
-# "in 90m" = 5400 seconds
-(sleep 5400 && terminal-notifier -title "🚶 Break" -message "Movement break - stand up" -sound default) &
+# "in 90m" = 5400 seconds (movement break)
+(sleep 5400 && osascript -e 'display notification "Stand up, leave the room" with title "🚶 Break" sound name "Glass"') &
 ```
 
 ### Scheduled notification (absolute time)
@@ -46,12 +46,12 @@ Run in background so it doesn't block:
 Calculate seconds until target time, then sleep:
 
 ```bash
-# For a specific time today (e.g., 5:30pm)
+# For a specific time today (e.g., 5:30pm = 17:30)
 TARGET=$(date -j -f "%H:%M" "17:30" +%s 2>/dev/null || date -d "17:30" +%s)
 NOW=$(date +%s)
 DELAY=$((TARGET - NOW))
 if [ $DELAY -gt 0 ]; then
-  (sleep $DELAY && terminal-notifier -title "⏰ Ping" -message "YOUR MESSAGE" -sound default) &
+  (sleep $DELAY && osascript -e 'display notification "YOUR MESSAGE" with title "⏰ Ping" sound name "Glass"') &
 fi
 ```
 
@@ -68,18 +68,19 @@ fi
 
 ## Setup
 
-macOS: `brew install terminal-notifier`
-Linux: `notify-send` is usually pre-installed
+**macOS:** No install needed. First time, open Script Editor app once so it registers with Notification Center, then enable notifications in System Settings → Notifications → Script Editor.
+
+**Linux:** `notify-send` is usually pre-installed (`sudo apt install libnotify-bin` if not).
 
 ## Examples
 
 ```bash
 # User: "remind me in 45 min to check the build"
-(sleep 2700 && terminal-notifier -title "⏰ Ping" -message "Check the build" -sound default) &
+(sleep 2700 && osascript -e 'display notification "Check the build" with title "⏰ Ping" sound name "Glass"') &
 
-# Day planning: schedule wrap-up reminder
-TARGET=$(date -j -f "%H:%M" "17:30" +%s); NOW=$(date +%s); DELAY=$((TARGET - NOW)); (sleep $DELAY && terminal-notifier -title "🏠 Wrap Up" -message "Client work done - evening time" -sound default) &
+# Day planning: schedule wrap-up reminder for 5:30pm
+TARGET=$(date -j -f "%H:%M" "17:30" +%s); NOW=$(date +%s); DELAY=$((TARGET - NOW)); [ $DELAY -gt 0 ] && (sleep $DELAY && osascript -e 'display notification "Client work done - evening time" with title "🏠 Wrap Up" sound name "Glass"') &
 
-# Movement break every 90 min
-(sleep 5400 && terminal-notifier -title "🚶 Break" -message "Stand up, leave the room" -sound default) &
+# Movement break in 90 min
+(sleep 5400 && osascript -e 'display notification "Stand up, leave the room" with title "🚶 Break" sound name "Glass"') &
 ```
